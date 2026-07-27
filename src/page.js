@@ -14,13 +14,8 @@ export function getPageHtml() {
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
-<script>
-if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-  window.location.replace('/picker-2d');
-}
-<\/script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.130/Build/Cesium/Widgets/widgets.css"/>
-<script src="https://cdn.jsdelivr.net/npm/cesium@1.130/Build/Cesium/Cesium.js"><\/script>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"><\/script>
 <style>
 :root {
   color-scheme: light dark;
@@ -63,9 +58,10 @@ body {
 
 /* ---- map + its glass controls ---- */
 #map { height:50vh; width:100%; min-height:250px; background:var(--map-bg); border-bottom:1px solid var(--line); }
-#map .cesium-viewer, #map .cesium-viewer-cesiumWidget, #map canvas { width:100%; height:100%; }
-#map .cesium-viewer-toolbar { top:76px; left:20px; right:auto; }
-#map .cesium-button { background:var(--glass); border-color:var(--line); color:var(--txt); }
+#map .maplibregl-canvas{outline:none}
+#map .maplibregl-ctrl-group{margin:20px;background:var(--glass);border:1px solid var(--line);box-shadow:0 5px 20px var(--shadow)}
+#map .maplibregl-ctrl-group button{width:40px;height:40px;background:transparent;color:var(--txt)}
+#map .maplibregl-ctrl-attrib{background:var(--glass);color:var(--muted)}
 .leaflet-control-zoom a { background:var(--glass)!important; color:var(--txt)!important; border-color:var(--line)!important; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
 .leaflet-control-zoom a:hover { background:var(--card2)!important; }
 .leaflet-bar { border:1px solid var(--line)!important; box-shadow:0 4px 18px rgba(0,0,0,.5)!important; }
@@ -443,57 +439,32 @@ function setLang(l) {
   applyI18n();
 }
 
-const viewer = new Cesium.Viewer('map', {
-  animation:false, timeline:false, baseLayerPicker:false, geocoder:false,
-  homeButton:false, navigationHelpButton:false, sceneModePicker:false,
-  fullscreenButton:false, infoBox:false, selectionIndicator:false,
-  terrainProvider:new Cesium.EllipsoidTerrainProvider()
-});
-viewer.scene.globe.enableLighting = true;
-viewer.scene.screenSpaceCameraController.minimumZoomDistance = 800;
-viewer.scene.screenSpaceCameraController.maximumZoomDistance = 35000000;
-viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(108, 25, 18000000) });
-
-const tileUrls = {
-  satellite:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  wgs84:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-  amap:'https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}'
-};
-let currentLayer = 'satellite';
-function addImagery(name) {
-  viewer.imageryLayers.removeAll();
-  const opts = { url:tileUrls[name] || tileUrls.satellite };
-  if (name === 'amap') opts.subdomains = ['1','2','3','4'];
-  viewer.imageryLayers.addImageryProvider(new Cesium.UrlTemplateImageryProvider(opts));
+function mapStyle(name) {
+  const urls = {
+    satellite:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    wgs84:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    amap:'https://webst01.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}'
+  };
+  return { version:8, sources:{base:{type:'raster',tiles:[urls[name] || urls.satellite],tileSize:256,maxzoom:19}}, layers:[{id:'base',type:'raster',source:'base'}] };
 }
-addImagery(currentLayer);
+let currentLayer = 'satellite';
+const map = new maplibregl.Map({
+  container:'map', style:mapStyle(currentLayer), center:[108,25], zoom:0.8,
+  projection:'globe', attributionControl:true, renderWorldCopies:false
+});
+map.addControl(new maplibregl.NavigationControl({showCompass:false}), 'top-left');
+map.on('load', function() { try { map.setProjection({type:'globe'}); } catch(e) {} });
 function switchLayer(name) {
   currentLayer = name;
-  addImagery(name);
+  map.setStyle(mapStyle(name));
+  map.once('style.load', function() { try { map.setProjection({type:'globe'}); } catch(e) {} });
   document.querySelectorAll('.layer-btn').forEach(b => b.classList.toggle('active', b.dataset.layer === name));
 }
-
-const pinBuilder = new Cesium.PinBuilder();
-let marker = null;
+let marker = new maplibregl.Marker({color:'#176cf2', draggable:true});
 let markerShown = false;
-function showMarker() {
-  if (markerShown) return;
-  marker = viewer.entities.add({
-    position: new Cesium.CallbackProperty(() => Cesium.Cartesian3.fromDegrees(lon, lat), false),
-    billboard: {
-      image: pinBuilder.fromColor(Cesium.Color.fromCssColorString('#176cf2'), 52).toDataURL(),
-      verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-      heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
-    }
-  });
-  markerShown = true;
-}
-viewer.screenSpaceEventHandler.setInputAction(function(click) {
-  const cartesian = viewer.camera.pickEllipsoid(click.position, viewer.scene.globe.ellipsoid);
-  if (!cartesian) return;
-  const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
-  setPos(Cesium.Math.toDegrees(cartographic.latitude), Cesium.Math.toDegrees(cartographic.longitude));
-}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+function showMarker() { if (!markerShown) { marker.addTo(map); markerShown = true; } }
+marker.on('dragend', function() { const p = marker.getLngLat(); setPos(p.lat, p.lng); });
+map.on('click', function(e) { setPos(e.lngLat.lat, e.lngLat.lng); });
 
 /* Altitude is an editable field (auto-filled from Open-Meteo, user can override). */
 function currentAlt() {
@@ -543,7 +514,7 @@ function setPos(newLat, newLon, knownAlt) {
 
 function moveTo(newLat, newLon, zoom, knownAlt) {
   setPos(newLat, newLon, knownAlt);
-  viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(lon, lat, zoom ? 220000 : 300000), duration:0.8 });
+  map.flyTo({ center:[lon, lat], zoom:zoom || 13, duration:800, essential:true });
 }
 
 /* ---- Elevation (Open-Meteo): debounced + cached, WGS-84 native ---- */

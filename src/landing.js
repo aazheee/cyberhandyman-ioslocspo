@@ -25,15 +25,15 @@ export function getLandingHtml() {
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif}
-.wrap{width:min(100%,720px);margin:0 auto;padding:clamp(72px,13vh,150px) 28px 62px}
+.wrap{width:min(100%,720px);margin:0 auto;padding:clamp(48px,8vh,86px) 28px 48px}
 .hero{text-align:center}
 .logo{width:76px;height:76px;border-radius:20px;vertical-align:middle;box-shadow:0 10px 28px rgba(23,108,242,.24)}
 .brand{display:flex;align-items:center;justify-content:center;gap:22px}
 .brand h1{margin:0;font-size:clamp(31px,6vw,44px);line-height:1.2;letter-spacing:.02em;font-weight:800}
 .tagline{margin:27px 0 0;color:var(--muted);font-size:clamp(18px,3.8vw,24px);letter-spacing:.06em}
-.enter{display:flex;align-items:center;justify-content:center;width:100%;margin:62px 0 0;min-height:108px;border-radius:15px;background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:#fff;text-decoration:none;font-size:clamp(22px,4.5vw,29px);font-weight:800;box-shadow:0 14px 30px rgba(23,108,242,.22);transition:transform .15s,filter .15s}
+.enter{display:flex;align-items:center;justify-content:center;width:100%;margin:42px 0 0;min-height:108px;border-radius:15px;background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:#fff;text-decoration:none;font-size:clamp(22px,4.5vw,29px);font-weight:800;box-shadow:0 14px 30px rgba(23,108,242,.22);transition:transform .15s,filter .15s}
 .enter:active{transform:scale(.985);filter:brightness(.96)}
-.section{margin-top:clamp(150px,22vh,235px)}
+.section{margin-top:clamp(72px,11vh,116px)}
 .section h2{margin:0;font-size:clamp(29px,5.3vw,38px);line-height:1.2;letter-spacing:.02em}
 .section .sub{margin:21px 0 0;color:var(--muted);font-size:clamp(17px,3.5vw,22px);line-height:1.65}
 .plat{margin-top:31px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
@@ -43,15 +43,15 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,B
 .plat .url{flex:1;min-width:0;padding:12px 22px;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .plat .copy{align-self:stretch;padding:0 26px;border:0;border-left:1px solid var(--line);background:transparent;color:var(--blue);font-size:clamp(17px,3.7vw,23px);font-weight:650;cursor:pointer}
 .plat .copy.ok{color:#16803c}
-.mitm{margin-top:clamp(110px,17vh,175px)}
+.mitm{margin-top:clamp(70px,10vh,108px)}
 .mitm h2{margin:0;font-size:clamp(29px,5.3vw,38px);line-height:1.2;letter-spacing:.02em}
 .hosts{margin-top:30px;padding:30px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
 .hosts code{display:block;color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:clamp(15px,3.35vw,20px);line-height:3.1;overflow-wrap:anywhere}
-footer{margin-top:clamp(120px,18vh,190px);text-align:center;color:var(--muted);font-size:clamp(15px,3vw,20px);line-height:1.7}
+footer{margin-top:clamp(76px,11vh,118px);text-align:center;color:var(--muted);font-size:clamp(15px,3vw,20px);line-height:1.7}
 @media(max-width:480px){
-  .wrap{padding:96px 24px 42px}
+  .wrap{padding:58px 24px 38px}
   .brand{gap:17px}.logo{width:64px;height:64px;border-radius:17px}
-  .enter{margin-top:56px;min-height:96px}.plat .big{min-height:92px;padding:18px 22px}.plat .line{display:none}
+  .enter{margin-top:38px;min-height:96px}.plat .big{min-height:92px;padding:18px 22px}.plat .line{display:none}
   .hosts{padding:23px 22px}.hosts code{line-height:3}
 }
 </style>

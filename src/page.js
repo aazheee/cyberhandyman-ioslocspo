@@ -14,8 +14,8 @@ export function getPageHtml() {
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.130/Build/Cesium/Widgets/widgets.css"/>
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.130/Build/Cesium/Cesium.js"><\/script>
 <style>
 :root {
   color-scheme: light dark;
@@ -58,7 +58,9 @@ body {
 
 /* ---- map + its glass controls ---- */
 #map { height:50vh; width:100%; min-height:250px; background:var(--map-bg); border-bottom:1px solid var(--line); }
-.leaflet-container { background:var(--map-bg); }
+#map .cesium-viewer, #map .cesium-viewer-cesiumWidget, #map canvas { width:100%; height:100%; }
+#map .cesium-viewer-toolbar { top:76px; left:20px; right:auto; }
+#map .cesium-button { background:var(--glass); border-color:var(--line); color:var(--txt); }
 .leaflet-control-zoom a { background:var(--glass)!important; color:var(--txt)!important; border-color:var(--line)!important; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
 .leaflet-control-zoom a:hover { background:var(--card2)!important; }
 .leaflet-bar { border:1px solid var(--line)!important; box-shadow:0 4px 18px rgba(0,0,0,.5)!important; }
@@ -208,17 +210,10 @@ body{min-height:100vh}
 </div>
 <div style="position:relative">
 <div id="map"></div>
-<div class="lang-switch">
-  <button class="lang-btn" data-lang="zh" onclick="setLang('zh')">中</button>
-  <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-</div>
 <div class="layer-switch">
   <button class="layer-btn active" data-layer="satellite" data-i18n="layer_satellite" onclick="switchLayer('satellite')">Satellite</button>
   <button class="layer-btn" data-layer="wgs84" onclick="switchLayer('wgs84')">WGS84</button>
   <button class="layer-btn" data-layer="amap" data-i18n="layer_amap" onclick="switchLayer('amap')">Amap</button>
-  <button class="layer-btn" data-layer="voyager" data-i18n="layer_color" onclick="switchLayer('voyager')">Color</button>
-  <button class="layer-btn" data-layer="standard" data-i18n="layer_standard" onclick="switchLayer('standard')">Standard</button>
-  <button class="layer-btn" data-layer="dark" data-i18n="layer_dark" onclick="switchLayer('dark')">Dark</button>
 </div>
 </div>
 <div class="panel">
@@ -412,14 +407,7 @@ const I18N = {
   }
 };
 
-function detectLang() {
-  try {
-    const saved = localStorage.getItem(LANG_KEY);
-    if (saved === 'zh' || saved === 'en') return saved;
-  } catch(e) {}
-  return 'zh'; // default to Chinese; tap EN to switch (remembered per browser)
-}
-let lang = detectLang();
+let lang = 'zh';
 
 function t(key) {
   const v = I18N[lang][key];
@@ -446,29 +434,57 @@ function setLang(l) {
   applyI18n();
 }
 
-const map = L.map('map').setView([20, 0], 2);  // neutral world view — implies no default location
-const tiles = {
-  satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, attribution:'ArcGIS'}),
-  wgs84: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {maxZoom:19, attribution:'ArcGIS WGS84'}),
-  standard: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'\\u00a9 OSM'}),
-  dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19, attribution:'\\u00a9 Carto'}),
-  amap: L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}', {maxZoom:18, subdomains:'1234', attribution:'\\u00a9 Amap'}),
-  voyager: L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {maxZoom:19, attribution:'\\u00a9 Carto'})
+const viewer = new Cesium.Viewer('map', {
+  animation:false, timeline:false, baseLayerPicker:false, geocoder:false,
+  homeButton:false, navigationHelpButton:false, sceneModePicker:false,
+  fullscreenButton:false, infoBox:false, selectionIndicator:false,
+  terrainProvider:new Cesium.EllipsoidTerrainProvider()
+});
+viewer.scene.globe.enableLighting = true;
+viewer.scene.screenSpaceCameraController.minimumZoomDistance = 800;
+viewer.scene.screenSpaceCameraController.maximumZoomDistance = 35000000;
+viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(108, 25, 18000000) });
+
+const tileUrls = {
+  satellite:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  wgs84:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+  amap:'https://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}'
 };
-let currentLayer = tiles.satellite;
-currentLayer.addTo(map);
+let currentLayer = 'satellite';
+function addImagery(name) {
+  viewer.imageryLayers.removeAll();
+  const opts = { url:tileUrls[name] || tileUrls.satellite };
+  if (name === 'amap') opts.subdomains = ['1','2','3','4'];
+  viewer.imageryLayers.addImageryProvider(new Cesium.UrlTemplateImageryProvider(opts));
+}
+addImagery(currentLayer);
 function switchLayer(name) {
-  map.removeLayer(currentLayer);
-  currentLayer = tiles[name];
-  currentLayer.addTo(map);
+  currentLayer = name;
+  addImagery(name);
   document.querySelectorAll('.layer-btn').forEach(b => b.classList.toggle('active', b.dataset.layer === name));
 }
-let marker = L.marker([lat, lon], {draggable:true});
-let markerShown = false;
-function showMarker() { if (!markerShown) { marker.addTo(map); markerShown = true; } }
 
-marker.on('dragend', e => { const p=e.target.getLatLng(); setPos(p.lat, p.lng); });
-map.on('click', e => { setPos(e.latlng.lat, e.latlng.lng); });
+const pinBuilder = new Cesium.PinBuilder();
+let marker = null;
+let markerShown = false;
+function showMarker() {
+  if (markerShown) return;
+  marker = viewer.entities.add({
+    position: new Cesium.CallbackProperty(() => Cesium.Cartesian3.fromDegrees(lon, lat), false),
+    billboard: {
+      image: pinBuilder.fromColor(Cesium.Color.fromCssColorString('#176cf2'), 52).toDataURL(),
+      verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+      heightReference: Cesium.HeightReference.CLAMP_TO_GROUND
+    }
+  });
+  markerShown = true;
+}
+viewer.screenSpaceEventHandler.setInputAction(function(click) {
+  const cartesian = viewer.camera.pickEllipsoid(click.position, viewer.scene.globe.ellipsoid);
+  if (!cartesian) return;
+  const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+  setPos(Cesium.Math.toDegrees(cartographic.latitude), Cesium.Math.toDegrees(cartographic.longitude));
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 /* Altitude is an editable field (auto-filled from Open-Meteo, user can override). */
 function currentAlt() {
@@ -510,7 +526,7 @@ function updateStatus() {
 function setPos(newLat, newLon, knownAlt) {
   lat = newLat; lon = newLon; selected = true;
   showMarker();
-  marker.setLatLng([lat, lon]);
+
   if (typeof knownAlt === 'number') { elev = Math.round(knownAlt); elevState = 'ok'; elevCache.set(elevKey(lat, lon), elev); }
   updateCoords();
   fetchElevation(lat, lon);
@@ -518,7 +534,7 @@ function setPos(newLat, newLon, knownAlt) {
 
 function moveTo(newLat, newLon, zoom, knownAlt) {
   setPos(newLat, newLon, knownAlt);
-  map.setView([lat, lon], zoom || 15);
+  viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(lon, lat, zoom ? 220000 : 300000), duration:0.8 });
 }
 
 /* ---- Elevation (Open-Meteo): debounced + cached, WGS-84 native ---- */

@@ -158,10 +158,6 @@ body {
 .layer-btn { border:none; background:transparent; padding:6px 10px; border-radius:7px; font-size:12px; font-weight:600; color:#a8b1c0; cursor:pointer; transition:all .15s; white-space:nowrap; }
 .layer-btn.active { background:linear-gradient(135deg,var(--cyan),var(--cyan2)); color:#022a2d; font-weight:700; }
 .layer-btn:active { transform:scale(.95); }
-.lang-switch { position:absolute; top:10px; left:10px; z-index:1000; display:flex; gap:2px; background:var(--glass); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:10px; padding:4px; box-shadow:0 4px 18px var(--shadow); }
-.lang-btn { border:none; background:transparent; padding:6px 11px; border-radius:7px; font-size:12px; font-weight:700; color:#a8b1c0; cursor:pointer; transition:all .15s; }
-.lang-btn.active { background:linear-gradient(135deg,var(--cyan),var(--cyan2)); color:#022a2d; }
-.lang-btn:active { transform:scale(.95); }
 
 @media(max-width:480px) { #map { height:44vh; } .panel { padding:12px; } .layer-btn { padding:5px 7px; font-size:11px; } }
 
@@ -172,8 +168,6 @@ body{min-height:100vh}
 #map{height:min(66vh,650px);min-height:430px;border-bottom:0}
 .layer-switch{top:24px;right:24px;padding:5px;border-radius:14px;background:var(--glass);box-shadow:0 5px 20px var(--shadow)}
 .layer-btn{padding:9px 13px;color:var(--muted)}
-.lang-switch{top:188px;left:38px;flex-direction:column;gap:3px;padding:4px;border-radius:14px;background:var(--glass);box-shadow:0 5px 20px var(--shadow)}
-.lang-btn{padding:10px 12px;color:var(--muted)}
 .panel{position:relative;z-index:1100;width:min(100% - 32px,770px);margin:-28px auto 0;padding:0 0 34px}
 .card{padding:20px;border-radius:16px;background:var(--card);box-shadow:var(--shadow)}
 .card h3{font-size:17px;margin-bottom:12px}
@@ -192,8 +186,6 @@ body{min-height:100vh}
   #map{height:52vh;min-height:340px}
   .layer-switch{top:12px;right:10px;max-width:calc(100% - 20px);overflow-x:auto}
   .layer-btn{padding:7px 10px;font-size:11px}
-  .lang-switch{top:92px;left:10px}
-  .lang-btn{padding:8px 10px;font-size:11px}
   .panel{width:calc(100% - 20px);margin:-20px auto 0}
   .card{padding:16px;border-radius:15px}
   .card h3{font-size:16px}
@@ -208,17 +200,11 @@ body{min-height:100vh}
 </div>
 <div style="position:relative">
 <div id="map"></div>
-<div class="lang-switch">
-  <button class="lang-btn" data-lang="zh" onclick="setLang('zh')">中</button>
-  <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-</div>
 <div class="layer-switch">
   <button class="layer-btn active" data-layer="satellite" data-i18n="layer_satellite" onclick="switchLayer('satellite')">Satellite</button>
   <button class="layer-btn" data-layer="wgs84" onclick="switchLayer('wgs84')">WGS84</button>
-  <button class="layer-btn" data-layer="amap" data-i18n="layer_amap" onclick="switchLayer('amap')">Amap</button>
   <button class="layer-btn" data-layer="voyager" data-i18n="layer_color" onclick="switchLayer('voyager')">Color</button>
   <button class="layer-btn" data-layer="standard" data-i18n="layer_standard" onclick="switchLayer('standard')">Standard</button>
-  <button class="layer-btn" data-layer="dark" data-i18n="layer_dark" onclick="switchLayer('dark')">Dark</button>
 </div>
 </div>
 <div class="panel">
@@ -412,14 +398,7 @@ const I18N = {
   }
 };
 
-function detectLang() {
-  try {
-    const saved = localStorage.getItem(LANG_KEY);
-    if (saved === 'zh' || saved === 'en') return saved;
-  } catch(e) {}
-  return 'zh'; // default to Chinese; tap EN to switch (remembered per browser)
-}
-let lang = detectLang();
+let lang = 'zh';
 
 function t(key) {
   const v = I18N[lang][key];

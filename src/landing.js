@@ -78,11 +78,7 @@ footer b{ color:#8fe0e6; }
 <div class="wrap">
   <header>
     <div class="logowrap"><img class="logo" src="/icon.svg" alt=""></div>
-    <p class="credit">
-      fork from 鸣谢贡献者：<a href="https://github.com/Yu9191/wloc" target="_blank" rel="noopener">Yu9191</a> ·
-      <a href="https://github.com/mekos2772/ios-location-spoofer" target="_blank" rel="noopener">mekos2772</a> ·
-      <a href="https://github.com/acheong08/ios-location-spoofer" target="_blank" rel="noopener">acheong08</a>
-    </p>
+    <p class="credit">WZ的专属定位修改</p>
   </header>
 
   <div class="ctas">

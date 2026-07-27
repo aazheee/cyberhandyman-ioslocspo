@@ -14,6 +14,11 @@ export function getPageHtml() {
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
+<script>
+if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+  window.location.replace('/picker-2d');
+}
+<\/script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.130/Build/Cesium/Widgets/widgets.css"/>
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.130/Build/Cesium/Cesium.js"><\/script>
 <style>

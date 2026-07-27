@@ -140,13 +140,18 @@ body {
 .fav-header h3 { margin-bottom:0; }
 
 /* ---- modal ---- */
-.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:var(--overlay); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); z-index:10000; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay { position:fixed; inset:0; background:var(--overlay); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); z-index:10000; display:none; align-items:center; justify-content:center; padding:20px; }
 .modal-overlay.show { display:flex; }
-.modal { background:var(--modal-gradient); border:1px solid var(--line); border-radius:18px; padding:20px; width:100%; max-width:340px; box-shadow:0 20px 60px var(--shadow); }
+.modal { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; width:min(100%,380px); box-shadow:0 20px 60px var(--shadow); }
 .modal h3 { font-size:17px; font-weight:700; margin-bottom:16px; text-align:center; color:var(--txt); }
-.modal input { width:100%; padding:12px; background:var(--inset); border:1px solid var(--line); border-radius:10px; font-size:15px; color:var(--txt); outline:none; margin-bottom:12px; -webkit-appearance:none; transition:border-color .15s,box-shadow .15s; }
-.modal .modal-btns { display:flex; gap:8px; }
-.modal .modal-btns .btn { padding:12px; }
+.modal input { width:100%; padding:13px; background:var(--bg); border:1px solid var(--line); border-radius:10px; font-size:16px; color:var(--txt); outline:none; margin-bottom:14px; -webkit-appearance:none; transition:border-color .15s,box-shadow .15s; }
+.modal .modal-btns { display:flex; gap:10px; }
+.modal .modal-btns .btn { padding:13px; }
+@media(max-width:480px) {
+  .modal-overlay { align-items:flex-end; padding:12px; }
+  .modal { width:100%; max-width:none; border-radius:18px 18px 14px 14px; padding:20px 16px calc(20px + env(safe-area-inset-bottom)); }
+  .modal h3 { font-size:18px; }
+}
 
 /* ---- map overlay switches: dark glass pills ---- */
 .layer-switch { position:absolute; top:10px; right:10px; z-index:1000; display:flex; gap:4px; background:var(--glass); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:10px; padding:4px; box-shadow:0 4px 18px var(--shadow); }

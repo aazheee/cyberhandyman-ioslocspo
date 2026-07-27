@@ -4,117 +4,82 @@ export function getLandingHtml() {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>iOS Location Spoofer · 虚拟定位</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101114" media="(prefers-color-scheme: dark)">
+<title>WZ 定位服务</title>
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <style>
 :root{
-  color-scheme: light dark;
-  --bg:#ffffff; --card:#ffffff; --card2:#f1f3f5; --line:#d9dde3;
-  --cyan:#087f8c; --cyan2:#05636e; --green:#16803c; --green2:#126c33;
-  --red:#d92d3b; --amber:#b86c00; --txt:#16181d; --muted:#5e6875; --mono:#08717c;
-  --detail:#3f4855; --glass:rgba(255,255,255,.9);
+  color-scheme:light dark;
+  --bg:#fafafa; --surface:#ffffff; --surface-soft:#f6f7f9; --line:#dfe3e8;
+  --text:#111827; --muted:#6b7280; --blue:#176cf2; --blue-deep:#125dde;
+  --shadow:0 16px 44px rgba(18,33,60,.08);
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme:dark){
   :root{
-    --bg:#0a0c11; --card:#12161d; --card2:#191e28; --line:#242b38;
-    --cyan:#17c3cf; --cyan2:#0e97a1; --green:#22c55e; --green2:#159a45;
-    --red:#ff5b60; --amber:#f5a623; --txt:#eef2f8; --muted:#8a93a5; --mono:#7fe3ea;
-    --detail:#c3ccdb; --glass:rgba(8,10,14,.92);
+    --bg:#101114; --surface:#191b20; --surface-soft:#202329; --line:#343841;
+    --text:#f4f7fb; --muted:#aab2c0; --blue:#4b8cff; --blue-deep:#2d73f5;
+    --shadow:0 16px 44px rgba(0,0,0,.3);
   }
 }
-*{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-body{
-  font-family:-apple-system,system-ui,"SF Pro","Helvetica Neue",sans-serif;
-  color:var(--txt); line-height:1.5;
-  background:
-    radial-gradient(1100px 420px at 50% -140px, rgba(23,195,207,.16), transparent 70%),
-    radial-gradient(700px 360px at 90% 8%, rgba(34,197,94,.08), transparent 65%),
-    var(--bg);
-  background-attachment:fixed;
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{width:min(100%,720px);margin:0 auto;padding:clamp(72px,13vh,150px) 28px 62px}
+.hero{text-align:center}
+.logo{width:76px;height:76px;border-radius:20px;vertical-align:middle;box-shadow:0 10px 28px rgba(23,108,242,.24)}
+.brand{display:flex;align-items:center;justify-content:center;gap:22px}
+.brand h1{margin:0;font-size:clamp(31px,6vw,44px);line-height:1.2;letter-spacing:.02em;font-weight:800}
+.tagline{margin:27px 0 0;color:var(--muted);font-size:clamp(18px,3.8vw,24px);letter-spacing:.06em}
+.enter{display:flex;align-items:center;justify-content:center;width:100%;margin:62px 0 0;min-height:108px;border-radius:15px;background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:#fff;text-decoration:none;font-size:clamp(22px,4.5vw,29px);font-weight:800;box-shadow:0 14px 30px rgba(23,108,242,.22);transition:transform .15s,filter .15s}
+.enter:active{transform:scale(.985);filter:brightness(.96)}
+.section{margin-top:clamp(150px,22vh,235px)}
+.section h2{margin:0;font-size:clamp(29px,5.3vw,38px);line-height:1.2;letter-spacing:.02em}
+.section .sub{margin:21px 0 0;color:var(--muted);font-size:clamp(17px,3.5vw,22px);line-height:1.65}
+.plat{margin-top:31px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.plat .big{display:flex;align-items:center;gap:20px;min-height:106px;padding:20px 28px;color:var(--text);font-size:clamp(18px,4vw,25px);font-weight:650;text-decoration:none}
+.plat .big::before{content:"→";display:grid;place-items:center;width:38px;height:38px;border:3px solid var(--blue);border-radius:50%;color:var(--blue);font-size:30px;line-height:1;font-weight:400;flex:none}
+.plat .line{display:flex;align-items:center;border-top:1px solid var(--line);min-height:58px}
+.plat .url{flex:1;min-width:0;padding:12px 22px;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plat .copy{align-self:stretch;padding:0 26px;border:0;border-left:1px solid var(--line);background:transparent;color:var(--blue);font-size:clamp(17px,3.7vw,23px);font-weight:650;cursor:pointer}
+.plat .copy.ok{color:#16803c}
+.mitm{margin-top:clamp(110px,17vh,175px)}
+.mitm h2{margin:0;font-size:clamp(29px,5.3vw,38px);line-height:1.2;letter-spacing:.02em}
+.hosts{margin-top:30px;padding:30px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
+.hosts code{display:block;color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:clamp(15px,3.35vw,20px);line-height:3.1;overflow-wrap:anywhere}
+footer{margin-top:clamp(120px,18vh,190px);text-align:center;color:var(--muted);font-size:clamp(15px,3vw,20px);line-height:1.7}
+@media(max-width:480px){
+  .wrap{padding:96px 24px 42px}
+  .brand{gap:17px}.logo{width:64px;height:64px;border-radius:17px}
+  .enter{margin-top:56px;min-height:96px}.plat .big{min-height:92px;padding:18px 22px}.plat .line{display:none}
+  .hosts{padding:23px 22px}.hosts code{line-height:3}
 }
-.wrap{ max-width:600px; margin:0 auto; padding:20px 16px calc(44px + env(safe-area-inset-bottom)); }
-
-/* --- header / branding --- */
-header{ text-align:center; padding:8px 0 6px; }
-header .logowrap{ position:relative; width:74px; margin:0 auto 14px; }
-header .logo{ width:74px; height:74px; border-radius:20px; display:block; box-shadow:0 0 0 1px var(--line),0 10px 30px rgba(23,195,207,.28); }
-.credit{ font-size:12px; color:var(--muted); margin-top:9px; line-height:1.7; }
-.credit a{ color:#8fe0e6; text-decoration:none; }
-
-/* --- primary CTA --- */
-.ctas{ display:flex; justify-content:center; margin:18px 0 4px; }
-.enter{ flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:17px 14px; border:none; border-radius:14px; font-size:16px; font-weight:800; cursor:pointer; text-decoration:none; transition:transform .12s,box-shadow .12s; }
-.enter:active{ transform:scale(.97); }
-.enter.go{ flex:0 1 320px; background:linear-gradient(135deg,#2ee06a,#129a44); color:#04240f; box-shadow:0 10px 26px rgba(34,197,94,.34); }
-
-.divider{ height:1px; background:linear-gradient(90deg,transparent,var(--line),transparent); margin:24px 0 20px; }
-
-/* --- section heads with accent bar --- */
-h2{ font-size:16px; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:9px; }
-h2::before{ content:""; width:4px; height:16px; border-radius:2px; background:linear-gradient(180deg,var(--cyan),var(--green)); }
-.sub{ font-size:12.5px; color:var(--muted); margin:0 0 14px 13px; }
-.note{ background:var(--card); border:1px solid var(--line); border-left:4px solid var(--cyan); border-radius:11px; padding:12px 14px; font-size:12.5px; color:var(--detail); margin-bottom:16px; }
-.note b{ color:var(--txt); }
-
-/* --- platform cards --- */
-.plat{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px; margin-bottom:12px; }
-.plat .big{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; border:none; border-radius:11px; background:linear-gradient(135deg,var(--cyan),var(--cyan2)); color:#022a2d; font-size:15.5px; font-weight:800; cursor:pointer; text-align:center; text-decoration:none; transition:filter .12s,transform .12s; }
-.plat .big:active{ filter:brightness(1.1); transform:scale(.98); }
-.plat .line{ display:flex; align-items:center; gap:8px; margin-top:9px; }
-.plat .url{ flex:1; min-width:0; font-family:"SF Mono",ui-monospace,monospace; font-size:11px; color:var(--muted); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.plat .copy{ flex:none; padding:8px 15px; border:1px solid var(--line); border-radius:8px; background:var(--card2); color:var(--txt); font-size:12.5px; font-weight:600; cursor:pointer; transition:all .12s; }
-.plat .copy:active{ background:var(--card2); }
-.plat .copy.ok{ background:var(--green); border-color:var(--green); color:#04240f; }
-.plat .pnote{ font-size:11.5px; color:var(--muted); margin-top:7px; line-height:1.6; }
-
-/* --- info boxes --- */
-.mitm{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:13px 15px; font-size:12.5px; color:#c3ccdb; margin-top:16px; }
-.mitm b{ color:var(--txt); }
-.mitm code{ display:inline-block; font-family:"SF Mono",ui-monospace,monospace; font-size:11.5px; color:var(--mono); word-break:break-all; line-height:2; }
-.mitm .hosts{ margin-top:8px; padding:10px 12px; background:var(--bg); border:1px solid var(--line); border-radius:9px; }
-.mitm .hosts code{ line-height:2.1; }
-
-
-.toast{ position:fixed; left:50%; bottom:40px; transform:translateX(-50%) translateY(20px); background:var(--glass); color:var(--txt); padding:11px 20px; border-radius:22px; font-size:14px; opacity:0; transition:all .25s; pointer-events:none; z-index:99; border:1px solid var(--line); }
-.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
-footer{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:26px; line-height:1.9; }
-footer b{ color:var(--cyan); }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="logowrap"><img class="logo" src="/icon.svg" alt=""></div>
-    <p class="credit">WZ的专属定位修改</p>
-  </header>
+<main class="wrap">
+  <section class="hero">
+    <div class="brand">
+      <img class="logo" src="/icon.svg" alt="WZ 定位服务">
+      <h1>WZ 定位服务</h1>
+    </div>
+    <p class="tagline">安全、简单、本地完成</p>
+    <a class="enter" href="/picker">进入选点网页</a>
+  </section>
 
-  <div class="ctas">
-    <a class="enter go" href="/picker">🗺️ 进入选点网页</a>
-  </div>
+  <section class="section">
+    <h2>安装模块</h2>
+    <p class="sub">选择代理客户端，可一键导入或复制链接手动添加。</p>
+    <div id="plats"></div>
+  </section>
 
-  <div class="divider"></div>
-
-  <h2>安装模块</h2>
-  <p class="sub">选你的代理客户端，点「一键导入」直接装；或「复制」手动添加。</p>
-  <div class="note">📍 生效前提：① 代理 App 已连接（开关/引擎打开、<b>非「直连」模式</b>）；② 开启 HTTPS 解密(MITM) 并信任证书；③ 装好对应客户端的模块。之后打开选点页选位置、点「储存到设备」即可生效。iOS 26+ 切换后可能需重启一次设备清缓存。</div>
-
-  <div id="plats"></div>
-
-  <div class="mitm">
-    <b>MITM 主机名（如全部配置成功仍不生效，在 MITM / HTTPS 解密中手动加入下面四个域名）：</b>
+  <section class="mitm">
+    <h2>MITM 主机名</h2>
     <div class="hosts"><code>gs-loc.apple.com<br>gs-loc-cn.apple.com<br>bluedot.is.autonavi.com<br>bluedot.is.autonavi.com.gds.alibabadns.com</code></div>
-  </div>
+  </section>
 
-  <footer>
-    坐标只存在你<b>当前设备</b>上，服务端不留存记录。<br>
-    GNU AGPL-3.0 · 仅供学习研究
-  </footer>
-</div>
-<div class="toast" id="toast"></div>
+  <footer>坐标仅保存在当前设备，服务端不留存记录。</footer>
+</main>
 <script>
 
 var origin = location.origin;

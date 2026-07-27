@@ -164,6 +164,42 @@ body {
 .lang-btn:active { transform:scale(.95); }
 
 @media(max-width:480px) { #map { height:44vh; } .panel { padding:12px; } .layer-btn { padding:5px 7px; font-size:11px; } }
+
+/* ---- WZ map workspace layout ---- */
+body{min-height:100vh}
+.topbar{height:42px;padding:0 20px;background:var(--glass);border-bottom:1px solid var(--line)}
+.topbar .back{font-size:14px;color:var(--muted)}
+#map{height:min(66vh,650px);min-height:430px;border-bottom:0}
+.layer-switch{top:24px;right:24px;padding:5px;border-radius:14px;background:var(--glass);box-shadow:0 5px 20px var(--shadow)}
+.layer-btn{padding:9px 13px;color:var(--muted)}
+.lang-switch{top:188px;left:38px;flex-direction:column;gap:3px;padding:4px;border-radius:14px;background:var(--glass);box-shadow:0 5px 20px var(--shadow)}
+.lang-btn{padding:10px 12px;color:var(--muted)}
+.panel{position:relative;z-index:1100;width:min(100% - 32px,770px);margin:-28px auto 0;padding:0 0 34px}
+.card{padding:20px;border-radius:16px;background:var(--card);box-shadow:var(--shadow)}
+.card h3{font-size:17px;margin-bottom:12px}
+.card h3::before{width:4px;height:17px}
+.coords{padding:12px 14px;font-size:14px;background:var(--surface-soft)}
+.row{gap:10px;margin-top:11px}
+.btn{min-height:44px;padding:12px 14px;border-radius:10px}
+.btn-primary{background:linear-gradient(135deg,#176cf2,#125dde);color:#fff;box-shadow:0 7px 17px rgba(23,108,242,.2)}
+.btn-secondary{background:var(--card);color:var(--muted)}
+.hint{margin-top:13px;color:var(--muted);font-size:12.5px;text-align:left}
+.accnote{background:var(--surface-soft);color:var(--muted)}
+.active-loc,.search-item,.fav-item{background:var(--surface-soft)}
+.toast{background:var(--card);color:var(--text);box-shadow:var(--shadow)}
+@media (max-width:680px){
+  .topbar{height:38px;padding:0 14px}
+  #map{height:52vh;min-height:340px}
+  .layer-switch{top:12px;right:10px;max-width:calc(100% - 20px);overflow-x:auto}
+  .layer-btn{padding:7px 10px;font-size:11px}
+  .lang-switch{top:92px;left:10px}
+  .lang-btn{padding:8px 10px;font-size:11px}
+  .panel{width:calc(100% - 20px);margin:-20px auto 0}
+  .card{padding:16px;border-radius:15px}
+  .card h3{font-size:16px}
+  .row{gap:7px}
+  .btn{min-width:0;padding:11px 9px;font-size:12px}
+}
 </style>
 </head>
 <body>

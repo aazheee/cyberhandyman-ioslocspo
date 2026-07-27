@@ -6,14 +6,25 @@ export function getLandingHtml() {
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>iOS Location Spoofer · 虚拟定位</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0a0c11">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <style>
 :root{
-  --bg:#0a0c11; --card:#12161d; --card2:#191e28; --line:#242b38;
-  --cyan:#17c3cf; --cyan2:#0e97a1; --green:#22c55e; --green2:#159a45;
-  --red:#ff5b60; --amber:#f5a623; --txt:#eef2f8; --muted:#8a93a5; --mono:#7fe3ea;
+  color-scheme: light dark;
+  --bg:#ffffff; --card:#ffffff; --card2:#f1f3f5; --line:#d9dde3;
+  --cyan:#087f8c; --cyan2:#05636e; --green:#16803c; --green2:#126c33;
+  --red:#d92d3b; --amber:#b86c00; --txt:#16181d; --muted:#5e6875; --mono:#08717c;
+  --detail:#3f4855; --glass:rgba(255,255,255,.9);
+}
+@media (prefers-color-scheme: dark) {
+  :root{
+    --bg:#0a0c11; --card:#12161d; --card2:#191e28; --line:#242b38;
+    --cyan:#17c3cf; --cyan2:#0e97a1; --green:#22c55e; --green2:#159a45;
+    --red:#ff5b60; --amber:#f5a623; --txt:#eef2f8; --muted:#8a93a5; --mono:#7fe3ea;
+    --detail:#c3ccdb; --glass:rgba(8,10,14,.92);
+  }
 }
 *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 body{
@@ -46,7 +57,7 @@ header .logo{ width:74px; height:74px; border-radius:20px; display:block; box-sh
 h2{ font-size:16px; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:9px; }
 h2::before{ content:""; width:4px; height:16px; border-radius:2px; background:linear-gradient(180deg,var(--cyan),var(--green)); }
 .sub{ font-size:12.5px; color:var(--muted); margin:0 0 14px 13px; }
-.note{ background:var(--card); border:1px solid var(--line); border-left:4px solid var(--cyan); border-radius:11px; padding:12px 14px; font-size:12.5px; color:#c3ccdb; margin-bottom:16px; }
+.note{ background:var(--card); border:1px solid var(--line); border-left:4px solid var(--cyan); border-radius:11px; padding:12px 14px; font-size:12.5px; color:var(--detail); margin-bottom:16px; }
 .note b{ color:var(--txt); }
 
 /* --- platform cards --- */
@@ -56,7 +67,7 @@ h2::before{ content:""; width:4px; height:16px; border-radius:2px; background:li
 .plat .line{ display:flex; align-items:center; gap:8px; margin-top:9px; }
 .plat .url{ flex:1; min-width:0; font-family:"SF Mono",ui-monospace,monospace; font-size:11px; color:var(--muted); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .plat .copy{ flex:none; padding:8px 15px; border:1px solid var(--line); border-radius:8px; background:var(--card2); color:var(--txt); font-size:12.5px; font-weight:600; cursor:pointer; transition:all .12s; }
-.plat .copy:active{ background:#2a3140; }
+.plat .copy:active{ background:var(--card2); }
 .plat .copy.ok{ background:var(--green); border-color:var(--green); color:#04240f; }
 .plat .pnote{ font-size:11.5px; color:var(--muted); margin-top:7px; line-height:1.6; }
 
@@ -68,10 +79,10 @@ h2::before{ content:""; width:4px; height:16px; border-radius:2px; background:li
 .mitm .hosts code{ line-height:2.1; }
 
 
-.toast{ position:fixed; left:50%; bottom:40px; transform:translateX(-50%) translateY(20px); background:rgba(8,10,14,.92); color:#fff; padding:11px 20px; border-radius:22px; font-size:14px; opacity:0; transition:all .25s; pointer-events:none; z-index:99; border:1px solid var(--line); }
+.toast{ position:fixed; left:50%; bottom:40px; transform:translateX(-50%) translateY(20px); background:var(--glass); color:var(--txt); padding:11px 20px; border-radius:22px; font-size:14px; opacity:0; transition:all .25s; pointer-events:none; z-index:99; border:1px solid var(--line); }
 .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 footer{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:26px; line-height:1.9; }
-footer b{ color:#8fe0e6; }
+footer b{ color:var(--cyan); }
 </style>
 </head>
 <body>

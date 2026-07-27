@@ -1,5 +1,6 @@
 import { Hono } from "hono/tiny";
 import { getPageHtml } from "./page.js";
+import { getPageHtml as getPage2dHtml } from "./page-2d.js";
 import { getLandingHtml } from "./landing.js";
 import { parseCoords, gcj02ToWgs84, bd09ToWgs84, round6 } from "./parse.js";
 import { ICON_180_B64, ICON_512_B64, ICON_SVG, b64ToBytes } from "./icons.js";
@@ -14,6 +15,10 @@ app.get("/", (c) => {
 app.get("/picker", (c) => {
   c.header("Cache-Control", "no-cache");
   return c.html(getPageHtml());
+});
+app.get("/picker-2d", (c) => {
+  c.header("Cache-Control", "no-cache");
+  return c.html(getPage2dHtml());
 });
 
 /* ---- PWA: manifest + icons (enables "Add to Home Screen") ---- */

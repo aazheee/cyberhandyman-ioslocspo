@@ -9,7 +9,8 @@ export function getPageHtml() {
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="iOSLoc">
-<meta name="theme-color" content="#0a0c11">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0c11" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icon-180.png">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -17,11 +18,23 @@ export function getPageHtml() {
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
 <style>
 :root {
-  --bg:#0a0c11; --card:#12161d; --card2:#191e28; --line:#242b38; --inset:rgba(255,255,255,.045);
-  --cyan:#17c3cf; --cyan2:#0e97a1; --green:#22c55e; --red:#ff5b60; --orange:#f5a623;
-  --txt:#eef2f8; --muted:#8a93a5; --mono:#7fe3ea;
-  /* legacy aliases kept so inline styles / JS class hooks keep working */
-  --blue:#17c3cf; --gray:#8a93a5;
+  color-scheme: light dark;
+  --bg:#ffffff; --card:#ffffff; --card2:#f1f3f5; --line:#d9dde3; --inset:rgba(15,23,42,.055);
+  --cyan:#087f8c; --cyan2:#05636e; --green:#16803c; --red:#d92d3b; --orange:#b86c00;
+  --txt:#16181d; --muted:#5e6875; --mono:#08717c; --blue:#087f8c; --gray:#5e6875;
+  --glass:rgba(255,255,255,.86); --map-bg:#eef1f4; --card-gradient:linear-gradient(180deg,#ffffff,#f7f8fa);
+  --modal-gradient:linear-gradient(180deg,#ffffff,#f4f6f8); --overlay:rgba(15,23,42,.35);
+  --shadow:rgba(15,23,42,.14);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:#0a0c11; --card:#12161d; --card2:#191e28; --line:#242b38; --inset:rgba(255,255,255,.045);
+    --cyan:#17c3cf; --cyan2:#0e97a1; --green:#22c55e; --red:#ff5b60; --orange:#f5a623;
+    --txt:#eef2f8; --muted:#8a93a5; --mono:#7fe3ea; --blue:#17c3cf; --gray:#8a93a5;
+    --glass:rgba(10,12,17,.82); --map-bg:#0a0c11; --card-gradient:linear-gradient(180deg,rgba(25,30,40,.72),rgba(18,22,29,.72));
+    --modal-gradient:linear-gradient(180deg,#1a1f29,#12161d); --overlay:rgba(4,6,10,.66);
+    --shadow:rgba(0,0,0,.5);
+  }
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -38,24 +51,24 @@ body {
 ::-webkit-scrollbar-thumb { background:#2b3342; border-radius:3px; }
 
 /* ---- top bar: sticky glass ---- */
-.topbar { position:sticky; top:0; z-index:1200; display:flex; align-items:center; gap:10px; padding:9px 12px; background:rgba(10,12,17,.82); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); font-size:11px; color:var(--muted); }
+.topbar { position:sticky; top:0; z-index:1200; display:flex; align-items:center; gap:10px; padding:9px 12px; background:var(--glass); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); font-size:11px; color:var(--muted); }
 .topbar .back { flex:none; color:var(--cyan); font-weight:700; text-decoration:none; }
 
 
 
 /* ---- map + its glass controls ---- */
-#map { height:50vh; width:100%; min-height:250px; background:#0a0c11; border-bottom:1px solid var(--line); }
-.leaflet-container { background:#0a0c11; }
-.leaflet-control-zoom a { background:rgba(18,22,29,.9)!important; color:var(--txt)!important; border-color:var(--line)!important; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
+#map { height:50vh; width:100%; min-height:250px; background:var(--map-bg); border-bottom:1px solid var(--line); }
+.leaflet-container { background:var(--map-bg); }
+.leaflet-control-zoom a { background:var(--glass)!important; color:var(--txt)!important; border-color:var(--line)!important; -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); }
 .leaflet-control-zoom a:hover { background:var(--card2)!important; }
 .leaflet-bar { border:1px solid var(--line)!important; box-shadow:0 4px 18px rgba(0,0,0,.5)!important; }
-.leaflet-control-attribution { background:rgba(10,12,17,.7)!important; color:#6b7484!important; }
+.leaflet-control-attribution { background:var(--glass)!important; color:#6b7484!important; }
 .leaflet-control-attribution a { color:#8a93a5!important; }
 
 .panel { padding:16px; max-width:600px; margin:0 auto; padding-bottom:calc(16px + env(safe-area-inset-bottom)); }
 
 /* ---- glass cards ---- */
-.card { background:linear-gradient(180deg,rgba(25,30,40,.72),rgba(18,22,29,.72)); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 8px 28px rgba(0,0,0,.34); }
+.card { background:var(--card-gradient); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:12px; box-shadow:0 8px 28px var(--shadow); }
 .card h3 { font-size:15px; font-weight:700; margin-bottom:12px; color:var(--txt); display:flex; align-items:center; gap:8px; }
 .card h3::before { content:""; width:3px; height:14px; border-radius:2px; background:linear-gradient(180deg,var(--cyan),var(--green)); flex:none; }
 
@@ -106,7 +119,7 @@ body {
 .error-banner b { display:block; margin-bottom:4px; color:#ff6b70; font-size:14.5px; }
 
 
-.toast { position:fixed; top:60px; left:50%; transform:translateX(-50%); background:rgba(8,10,14,.92); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); color:#fff; padding:11px 20px; border-radius:22px; font-size:14px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:9999; max-width:90vw; text-align:center; box-shadow:0 8px 28px rgba(0,0,0,.5); }
+.toast { position:fixed; top:60px; left:50%; transform:translateX(-50%); background:var(--glass); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); color:#fff; padding:11px 20px; border-radius:22px; font-size:14px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:9999; max-width:90vw; text-align:center; box-shadow:0 8px 28px rgba(0,0,0,.5); }
 .toast.show { opacity:1; }
 
 .active-loc { background:var(--inset); border:1px solid var(--line); border-radius:10px; padding:11px 12px; font-size:13px; color:var(--txt); }
@@ -127,20 +140,20 @@ body {
 .fav-header h3 { margin-bottom:0; }
 
 /* ---- modal ---- */
-.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(4,6,10,.66); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); z-index:10000; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:var(--overlay); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); z-index:10000; display:none; align-items:center; justify-content:center; padding:20px; }
 .modal-overlay.show { display:flex; }
-.modal { background:linear-gradient(180deg,#1a1f29,#12161d); border:1px solid var(--line); border-radius:18px; padding:20px; width:100%; max-width:340px; box-shadow:0 20px 60px rgba(0,0,0,.6); }
+.modal { background:var(--modal-gradient); border:1px solid var(--line); border-radius:18px; padding:20px; width:100%; max-width:340px; box-shadow:0 20px 60px var(--shadow); }
 .modal h3 { font-size:17px; font-weight:700; margin-bottom:16px; text-align:center; color:var(--txt); }
 .modal input { width:100%; padding:12px; background:var(--inset); border:1px solid var(--line); border-radius:10px; font-size:15px; color:var(--txt); outline:none; margin-bottom:12px; -webkit-appearance:none; transition:border-color .15s,box-shadow .15s; }
 .modal .modal-btns { display:flex; gap:8px; }
 .modal .modal-btns .btn { padding:12px; }
 
 /* ---- map overlay switches: dark glass pills ---- */
-.layer-switch { position:absolute; top:10px; right:10px; z-index:1000; display:flex; gap:4px; background:rgba(10,12,17,.74); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:10px; padding:4px; box-shadow:0 4px 18px rgba(0,0,0,.45); }
+.layer-switch { position:absolute; top:10px; right:10px; z-index:1000; display:flex; gap:4px; background:var(--glass); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:10px; padding:4px; box-shadow:0 4px 18px var(--shadow); }
 .layer-btn { border:none; background:transparent; padding:6px 10px; border-radius:7px; font-size:12px; font-weight:600; color:#a8b1c0; cursor:pointer; transition:all .15s; white-space:nowrap; }
 .layer-btn.active { background:linear-gradient(135deg,var(--cyan),var(--cyan2)); color:#022a2d; font-weight:700; }
 .layer-btn:active { transform:scale(.95); }
-.lang-switch { position:absolute; top:10px; left:10px; z-index:1000; display:flex; gap:2px; background:rgba(10,12,17,.74); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:10px; padding:4px; box-shadow:0 4px 18px rgba(0,0,0,.45); }
+.lang-switch { position:absolute; top:10px; left:10px; z-index:1000; display:flex; gap:2px; background:var(--glass); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:10px; padding:4px; box-shadow:0 4px 18px var(--shadow); }
 .lang-btn { border:none; background:transparent; padding:6px 11px; border-radius:7px; font-size:12px; font-weight:700; color:#a8b1c0; cursor:pointer; transition:all .15s; }
 .lang-btn.active { background:linear-gradient(135deg,var(--cyan),var(--cyan2)); color:#022a2d; }
 .lang-btn:active { transform:scale(.95); }
